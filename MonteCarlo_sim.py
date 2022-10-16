@@ -29,14 +29,20 @@ pub_200, pub2 = 0.137, 0.049  #published values
 low_en, high_en = atten_coef(0.2), atten_coef(2)
 low_per, high_per = 100*((atten_coef(0.2)-pub_200)/atten_coef(0.2)), 100*((atten_coef(2)-pub2)/atten_coef(2))
 
-print(f"The attenuation coefficient for 200KeV is:          {low_en:.3f}")
+print(f"The attenuation coefficient for 200KeV is:          {low_en:.3f} cm-1")
 print(f'percent difference from published value for 200KeV: {low_per:.1f}%')
 
-print(f'The attenuation coefficient for 2MeV is:            {high_en:.3f}')
+print(f'The attenuation coefficient for 2MeV is:            {high_en:.3f} cm-1')
 print(f'percent difference from published value for 2MeV:   {high_per:.1f}%')
 
-# task 2
+energy = np.linspace(min, max, 100)
 
+plt.title('atttenuation coefficient as a function of energy')
+plt.ylabel('attenuation coeeficent [cm^-1')
+plt.xlabel('energy [Mev]')
+plt.plot(energy, atten_coef(energy))
+plt.show()
+# task 2
 def prob_dis(): 
     return 0
 
