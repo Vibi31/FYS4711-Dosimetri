@@ -136,19 +136,69 @@ def diff_scatt(theta, hv):          #energy in MeV, incident angle theta
     f2 = ((new_hv/hv) + (hv/new_hv) - (sin(phi))**2)
     crosso = (radius**2/2) * f1 * f2                   #with respect to omega
 
-    return (new_hv, crosso)
+    return new_hv, crosso
 
 
 def plot_task4(theta, energy):
     scatter_hv, compton = diff_scatt(theta, energy)
 
     plt.title(f'normalized d\u03C3/d\u03B8  as a function of \u03C3 for {energy} MeV photons')
-    plt.plot(theta, scatter_hv)
+    plt.plot(theta, scatter_hv/energy)
     plt.xlabel('angle \u03B8 in degrees')
     plt.ylabel('scattered photon energy in MeV')
     plt.show()
 
-theta = np.linspace(0,180,180)
+theta = np.linspace(0,180,181)
 
-plot_task4(theta, 0.2)
-plot_task4(theta, 2)
+#plot_task4(theta, 0.2)
+#plot_task4(theta, 2)
+
+
+
+#task 5
+
+def rej_tec(theta, hv):                               #Rejection Technique for compton scattering
+
+    n = 1000                                          #number of simulation
+    new_hv, cross_sec = diff_scatt(theta, hv)         #getting curve value that will be used to determine rejection
+
+    norm_hv = np.around(new_hv/hv, decimals=2)        #normalising energy and rounding to two decimal places
+    
+    cs_max = np.max(cross_sec)                        #value that will be used to de-normalise for simulated values
+    
+    np.around(cross_sec/cs_max, decimals=2)
+    sim_angle, sim_cross = [], []                     #creating emty array to be filled
+
+
+    for i in range(n*2):
+        rand_angle = np.random.randint(0, 180)        #normalised random angle chosen between 0 and 180 degrees
+        rand_norm =  np.random.randint(0,100)/100     #getting random normalise number between 0.00 and 1.00
+        
+        j = np.where(theta == rand_angle)            #getting index of list from the random angle
+
+        if rand_norm <= norm_hv[j]:               #here we check if the random-normalised energy is below or equal to calculated energy
+            sim_angle.append(rand_angle)
+
+            sim_cross.append(rand_norm*cs_max)
+
+    return sim_angle, sim_cross
+
+def plot_task5(theta, hv):
+    angle, dsdt = rej_tec(theta, hv)
+    scatter_hv, compton = diff_scatt(theta, hv)
+
+    plt.title(f'histogram and normalized d\u03C3/d\u03B8  as a function of \u03C3 for {hv} MeV photons')
+    plt.xlabel('angle \u03B8 in degrees')
+    plt.ylabel('normalise scattered photon energy')
+
+    plt.hist(angle, bins = 20)    
+    plt.plot(theta, scatter_hv/hv)
+
+    plt.legend(['simulated','analytical'])
+
+    plt.show()
+
+
+
+plot_task5(theta, 2)
+plot_task5(theta, 0.2)
