@@ -187,18 +187,24 @@ def plot_task5(theta, hv):
     angle, dsdt = rej_tec(theta, hv)
     scatter_hv, compton = diff_scatt(theta, hv)
 
-    plt.title(f'histogram and normalized d\u03C3/d\u03B8  as a function of \u03C3 for {hv} MeV photons')
-    plt.xlabel('angle \u03B8 in degrees')
-    plt.ylabel('normalise scattered photon energy')
+    fig, ax1 = plt.subplots(figsize=(8, 8))
+    ax2 = ax1.twinx()
 
-    plt.hist(angle, bins = 20)    
-    plt.plot(theta, scatter_hv/hv)
+    ax1.hist(angle, bins = 25)    
+    ax2.plot(theta, scatter_hv/hv, 'r')
 
-    plt.legend(['simulated','analytical'])
+    ax1.set_xlabel("degrees \u03B8")
+    ax1.set_ylabel("d\u03C3/d\u03B8")
 
+
+    fig.suptitle(f"f'histogram and normalized d\u03C3/d\u03B8  as a function of \u03B8 for {hv} MeV photons")
+    #fig.show()
     plt.show()
-
-
 
 plot_task5(theta, 2)
 plot_task5(theta, 0.2)
+
+#task 6
+
+
+type jupyter notebook  
