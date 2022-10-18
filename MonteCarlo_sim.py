@@ -1,5 +1,5 @@
 import numpy as np 
-from numpy import pi, log, exp
+from numpy import pi, log, exp, cos, sin
 import matplotlib.pyplot as plt
 
 min, max = 50, 2000      #min and max photon energy in kev
@@ -109,13 +109,46 @@ def plot_task3(hv):  #function to plot histogram
     plt.show()
 
 
-plot_task3(0.2)
-plot_task3(2)
+#plot_task3(0.2)
+#plot_task3(2)
+
+#task 4
+
+def scatter(incomming_angle_deg, incomming_energy):
+    hv = incomming_energy                             #energy in Mev
+    mc2 = 0.511                                       #electron volt mass (Mev)
+    phi = np.deg2rad(incomming_angle_deg)             #radians of incomming angle
+    c = 3e8                                           #m/s
+
+    new_hv = hv/(1+(hv/mc2)*(1-cos(phi)))
+    return new_hv
+
+def diff_scatt(theta, hv):          #energy in MeV, incident angle theta
+    mc2 = 0.511                                       #electron volt mass (Mev)
+    radius = 2.82*1e-13                               #electron radius in cm
+    phi = np.deg2rad(theta)                           #radians of incomming angle
+    c = 3e8                                           #m/s
+
+    new_hv = hv/(1+(hv/mc2)*(1-cos(phi)))             #calculating scattered photon energy
+
+    #calculating equation from slide 39, compton cross section
+    f1 = (new_hv/hv)**2
+    f2 = ((new_hv/hv) + (hv/new_hv) - (sin(phi))**2)
+    crosso = (radius**2/2) * f1 * f2                   #with respect to omega
+
+    return (new_hv, crosso)
 
 
-    
+def plot_task4(theta, energy):
+    scatter_hv, compton = diff_scatt(theta, energy)
 
+    plt.title(f'normalized d\u03C3/d\u03B8  as a function of \u03C3 for {energy} MeV photons')
+    plt.plot(theta, scatter_hv)
+    plt.xlabel('angle \u03B8 in degrees')
+    plt.ylabel('scattered photon energy in MeV')
+    plt.show()
 
+theta = np.linspace(0,180,180)
 
-
-
+plot_task4(theta, 0.2)
+plot_task4(theta, 2)
